@@ -1,11 +1,7 @@
 @import url(fontawesome-all.min.css);
 @import 'https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400';
 
-/*
-	Stellar by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-*/
+
 
 html, body, div, span, applet, object,
 iframe, h1, h2, h3, h4, h5, h6, p, blockquote,
@@ -2016,6 +2012,7 @@ input, select, textarea {
 		padding: 0 1em;
 		text-decoration: none;
 		width: 100%;
+		max-width: 80vw;
 	}
 
 		input[type="text"]:invalid,
@@ -2715,17 +2712,25 @@ input, select, textarea {
 	table {
 		margin: 0 0 2em 0;
 		width: 100%;
+		table-layout:fixed;
 	}
 
 		table tbody tr {
 			border: solid 1px;
 			border-left: 0;
 			border-right: 0;
+			max-width: 80vw;
 		}
+		td:first-child{
+			width: 75%;
+			overflow: auto;
 
+		}
 		table td {
 			padding: 0.75em 0.75em;
+			max-width: 80vw;
 		}
+		
 
 		table th {
 			font-size: 0.9em;

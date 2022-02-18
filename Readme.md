@@ -8,7 +8,7 @@ First, you need to install the dependencies and change the backend url in /publi
 `pip install flask`  
 `pip install flask-cors`  
 `pip install sklearn`  
-`pip install waitress` 
+`pip install waitress`  
 [Note: waitress is optional]
 
 Then, you can run the server and test the frontend.  
