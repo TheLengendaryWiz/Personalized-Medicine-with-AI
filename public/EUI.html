@@ -1,0 +1,232 @@
+<!DOCTYPE HTML>
+<!--
+	Stellar by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+
+<head>
+	<title>End User Interface
+	</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<noscript>
+		<link rel="stylesheet" href="assets/css/noscript.css" />
+	</noscript>
+</head>
+
+<body class="is-preload">
+
+	<!-- Wrapper -->
+	<div id="wrapper">
+
+		<!-- Header -->
+		<header id="header">
+			<h1>End User Interface</h1>
+			<p>Use this to emulate the pateient's experience</p>
+		</header>
+
+		<!-- Main -->
+		<div id="main">
+
+			<!-- Content -->
+
+			<section id="content" class="main">
+				<script>
+					var numberoftables=1
+					function a() {
+						
+						//get all the items with a class of "demo-dna"
+						var dna = document.getElementsByClassName("demo-dna");
+						//log it
+						console.log(dna);
+						
+
+						
+						
+
+						
+
+						url = "https://api.allorigins.win/get?url="+ encodeURI('https://google.com/q=' + cols2.value);
+
+						//fetch the url
+						fetch(url)
+						.then(response => response.json())
+  						.then(data => console.log(data));
+
+							
+						return false;
+					}
+					function addtotable(tablename){
+						//add another row to the table with the id "dditable"
+						var table = document.getElementById(tablename);
+						var row = table.insertRow(-1);
+						//add a cell to the row
+						var cell1 = row.insertCell(0);
+						//add a textarea to the cell
+						var textarea = document.createElement("textarea");
+						textarea.setAttribute("id", "demo-dna");
+						textarea.setAttribute("class", "demo-dna");
+						textarea.setAttribute("placeholder", "Enter your dna sample here");
+						cell1.appendChild(textarea);
+						var cell2 = row.insertCell(1);
+						var textarea = document.createElement("textarea");
+						textarea.setAttribute("id", "demo-ef");
+						textarea.setAttribute("class", "demo-ef");
+						textarea.setAttribute("placeholder", "Enter your effeciency here");
+						cell2.appendChild(textarea);
+					}
+					function createNewTable(){
+						numberoftables++;
+						//get the div with class of tabble-wrapper
+						var tablewrapper = document.getElementsByClassName("table-wrap")[0];
+						//create a new div with the id of "variation" + numberoftables
+						var newdiv = document.createElement("div");
+						newdiv.setAttribute("id", "variation"+numberoftables);
+						//make newdiv child of tablewrapper
+						tablewrapper.appendChild(newdiv);
+						//create a new table with the id of "dditable" + numberoftables
+						var newtable = document.createElement("table");
+						newtable.setAttribute("id", "dditable"+numberoftables);
+						//set its class to alt
+						newtable.setAttribute("class", "alt");
+						//create a h2 with text of "Variation" + numberoftables
+						var newh2 = document.createElement("h2");
+						newh2.innerHTML = "<br> Variation"+numberoftables;
+						//make newh2 child of newdiv
+						newdiv.appendChild(newh2);
+						//create the header row for the table
+						var header = newtable.createTHead();
+						//create a row in the header
+						var headerrow = header.insertRow(0);
+						//create a cell in the header row
+						var headercell1 = headerrow.insertCell(0);
+						//set the text of the cell to "DNA"
+						headercell1.innerHTML = "DNA";
+						//create a cell in the header row
+						var headercell2 = headerrow.insertCell(1);
+						//set the text of the cell to "Efficiency"
+						headercell2.innerHTML = "Efficiency";
+
+						//make the table a child of newdiv
+						newdiv.appendChild(newtable);
+					}
+				</script>
+				<!-- <span class="image main"><img src="images/pic04.jpg" alt="" /></span> -->
+				<form name="DDI"	>
+					<div class="row gtr-uniform">
+
+						<div class="col-12">
+							<h2>Choose a model. (<b>Won't be shown to End User</b>) </h2>
+							<p>There are plenty of machine learning models available, fell free to experiment and find which one works best for your use case</p>
+							<select name="demo-category" id="demo-category">
+								<option value="-1">- Choose Machine Learning Model -</option>
+								<option value="0">K Nearest Neighbour</option>
+								<option value="1">Adaboost</option>
+								<option value="2">Linear Regression</option>
+								<option value="3">Logistic Regression</option>
+								<option value="4">Support Vector Classifier</option>
+								<option value="5">Decision Tree Regressor</option>
+							</select>
+						</div>
+
+						<div class="col-12">
+							<h2>DNA Samples & Effeciency Data Input (<b>Won't be shown to End User</b>)</h2>
+							<p>Enter your DNA Samples on the left side and the corresponding effeciency on the right. Use the add item button to add another row to the table. Make sure all the DNA strings are of the same length. Effeciency must be a rational number.</p>
+							<div class="table-wrapper">
+							<div class="table-wrap"><div id="variation1">
+								<h2>Variation 1 (Base) </h2>
+								<table class="alt" id="dditable1">
+									<thead>
+										<tr>
+											<th>DNA</th>
+											<th>Effeciency</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td><textarea name="demo-dna1" id="demo-dna1"
+												placeholder="Enter your dna samples"
+												rows="2" class="demo-dna1">ACCGC</textarea></td>
+											<td><textarea class="demo-ef1" name="demo-ef1" id="demo-ef1"
+												placeholder="Enter your effeciency samples"
+												rows="1">100</textarea></td>
+										</tr>
+										<tr>
+											<td><textarea class="demo-dna1" name="demo-dna1" id="demo-dna1"
+												placeholder="Enter your dna samples"
+												rows="2">ACCGC</textarea></td>
+											<td><textarea class="demo-ef1" name="demo-ef1" id="demo-ef1"
+												placeholder="Enter your effeciency samples"
+												rows="1">100</textarea></td>
+										</tr>
+										</tbody>
+								</table>
+								<a class="button" onclick="addtotable('dditable1')">Add item</a>
+							</div>
+							</div>
+							<br>
+							<a class="button" onclick="createNewTable()">Add Table</a>
+							<!-- <textarea name="demo-dna" id="demo-dna"
+								placeholder="Enter your dna samples in order seperated by a comma"
+								rows="6">ACCGC</textarea> -->
+							
+							<div class="col-12">
+								<br>
+								<h2>Enter Patient DNA</h2>
+								<p>This is the only part of the page that will be shown to the client. The previous sections were <b>only for obtaining data to train the model</b>. Enter the patient's dna data</p>
+								<textarea name="demo-et" id="demo-et"
+									placeholder="Enter your samples in order seperated by a comma"
+									rows="2">CCGCG</textarea>
+								<br>
+							</div>
+							<div class="col-12">
+								<ul class="actions">
+									<li><input type="button" value="Send Data" class="primary" onclick="
+									a()"/></li>
+								</ul>
+							</div>
+						</div>
+				</form>
+				
+			</section>
+
+		</div>
+
+		<!-- Footer -->
+		<footer id="footer">
+			<section>
+				<h2>About the project creator</h2>
+				<p>Prateek is an ambitious person interested in Maths,Science and Computer Science Technology. This
+					project is an attempt to unify two of his greatest passions under one project to benefit all of
+					humankind.This project is revolutionize medicine like no other.</p>
+
+			</section>
+			<section>
+				<h2>Contact details </h2>
+				<dl class="alt">
+					<dt>Address</dt>
+					<dd>PSBB KKN &bull; Chennai, TN &bull; India</dd>
+					<dt>Email</dt>
+					<dd><a href="#">prateekmahesh20@gmail.com</a></dd>
+				</dl>
+
+			</section>
+			<p class="copyright">&copy; M.Prateek.</p>
+		</footer>
+
+	</div>
+
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrollex.min.js"></script>
+	<script src="assets/js/jquery.scrolly.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+</body>
+
+</html>

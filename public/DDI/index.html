@@ -1,0 +1,348 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>Drug Development Interface
+	</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="/assets/css/main.css" />
+	<link rel="shortcut icon" href="images/logo.svg">
+	<noscript>
+		<link rel="stylesheet" href="/assets/css/noscript.css" />
+	</noscript>
+</head>
+
+<body class="is-preload">
+
+	<!-- Wrapper -->
+	<div id="wrapper">
+
+		<!-- Header -->
+		<header id="header">
+			<h1>Drug Development Interface</h1>
+			<p>Use this to develop your drug</p>
+		</header>
+
+		<!-- Main -->
+		<div id="main">
+
+			<!-- Content -->
+
+			<section id="content" class="main">
+				<script>
+					var firsttime=true;
+					function displayData(data){
+						//log data's type
+						console.log(typeof data);
+						console.log(data);
+						//get the element with id "Report"
+						var report = document.getElementById("Report");
+						//if the data contains "Error", then scroll into view and display the error
+						if(data.includes("Error")){
+							report.scrollIntoView();
+							report.innerText=data;
+							return;
+						}
+						report.scrollIntoView();
+						if(firsttime || !firsttime){
+							report.innerText="";
+							//get the element with id "Report"
+							var report = document.getElementById("Report");
+							//scroll into view
+							report.scrollIntoView();
+							//create a table
+							var table = document.createElement("table");
+							//create a table row
+							var row = table.insertRow(0);
+							//create a table cell
+							var cell = row.insertCell(0);
+							//create a text node
+							var text = document.createTextNode("DNA");
+							//append the text node to the cell
+							cell.appendChild(text);
+							//create a table cell
+							cell = row.insertCell(1);
+							//create a text node
+							text = document.createTextNode("Drug Effeciency");
+							//append the text node to the cell
+							cell.appendChild(text);
+							//append the table to the div
+							report.appendChild(table);
+							firsttime=false;
+						}
+						//convert the data to an array
+
+						var dataArray = JSON.parse(data);
+						console.log(dataArray);
+						//get the table element
+						var table = document.getElementById("Report").getElementsByTagName("table")[0];
+						//get the element with id demo-et
+						var et = document.getElementById("demo-et").value;
+						//split et where there is a comma
+						var et_split = et.split(",");
+						//iterate through the et_split
+						for(var i=0;i<et_split.length;i++){
+							//get the element with id "Report"
+							var report = document.getElementById("Report");
+							//create a table row
+							var row = table.insertRow(i+1);
+							//create a table cell
+							var cell = row.insertCell(0);
+							//create a text node
+							var text = document.createTextNode(et_split[i]);
+							//append the text node to the cell
+							cell.appendChild(text);
+							//create a table cell
+							cell = row.insertCell(1);
+							//create a text node
+							text = document.createTextNode(dataArray[i]);
+							//append the text node to the cell
+							cell.appendChild(text);
+						} 
+					}
+					function a() {
+						
+						//get all the items with a class of "demo-dna"
+						var dna = document.getElementsByClassName("demo-dna");
+						var file=dna[0]
+						//check if the file is empty
+						if(file.value==""){
+							alert("Please enter a file");
+							return;
+						}
+						//get the element with id "demo-category"
+						var category = document.getElementById("demo-category");
+						var categoryValue = category.value;
+						//if the categoryValue is -1, then the user did not select a category
+						if(categoryValue==-1){
+							alert("Please select a category");
+							return;
+						}
+						//check the file type
+						var fileType = file.files[0].type;
+						console.log(fileType);
+						var fileUpload = file
+						var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv)$/;
+						var rows=[]
+						var cols=['','']
+						
+						
+						//get the element with id "demo-et"
+						var et = document.getElementById("demo-et").value;
+						if (regex.test(fileUpload.value.toLowerCase())) {
+							if (typeof (FileReader) != "undefined") {
+								var reader = new FileReader();
+								reader.onload = function (e) {
+									console.log(e.target.result);
+									rows = e.target.result.split("\n");
+									console.log(rows);
+									
+									for (var i = 0; i < rows.length; i++) {
+										rows[i] = rows[i].replace( /[\r\n]+/gm, "" );;
+									}
+									for (var i = 0; i < rows.length; i++) {
+										var split = rows[i].split(",");
+										//add split[0] to cols[0]
+										cols[0] = cols[0].toString() + split[0].toString()+",";
+										cols[1] = cols[1].toString() + split[1].toString()+",";
+									}
+									console.log(cols);
+									// set cols[0] and cols[1] to cols[0] and cols[1] split at a comma
+									cols[0] = cols[0].split(",");
+									cols[1] = cols[1].split(",");
+									//remove the first and last element of cols[0] and cols[1]
+									cols[0].shift();
+									cols[0].pop();
+									cols[1].shift();
+									cols[1].pop();
+									console.log(cols);
+									var model="None"
+									//switch case to determine which ML model to use
+									switch(categoryValue){
+										case "0":
+											model="knn"
+											break;
+										case "1":
+											model="adaboost"
+											break;
+										case "2":
+											model="linear"
+											break;
+										case "3":
+											model="logistic"
+											break;
+										case "4":
+											model="svc"
+											break;
+										case "5":
+											model="dtr"
+											break;
+										default:
+											model="None"
+											alert("Please select a category")
+											return;
+											break;
+									}
+									url = 'https://motionlessenragedquarks.prateekm1.repl.co/' + model + '?train=' + cols[0] + '&train_target=' + cols[1] + '&test_strings=' + et.split(",").toString();
+									console.log(url);
+									//fetch the url
+									fetch(url)
+									.then(response => response.text())
+									.then(data => displayData(data));
+								}
+								reader.readAsText(fileUpload.files[0]);
+							} else {
+								alert("This browser does not support HTML5.");
+							}
+						} else {
+							alert("Please upload a valid CSV file.");
+							
+						}
+						//iterate through the rows and remove all line endings
+						
+						//split the rows into columns
+						
+						console.log(cols);
+						
+
+						//TODO: Implement custom Cors reverse proxy
+						//TODO: Improvise csv file detection
+						//TODO:Add Custom Alert to display the data
+						return false;
+					}
+					function addtotable(){
+						//add another row to the table with the id "dditable"
+						var table = document.getElementById("dditable");
+						var row = table.insertRow(-1);
+						//add a cell to the row
+						var cell1 = row.insertCell(0);
+						//add a textarea to the cell
+						var textarea = document.createElement("textarea");
+						textarea.setAttribute("id", "demo-dna");
+						textarea.setAttribute("class", "demo-dna");
+						textarea.setAttribute("placeholder", "Enter your dna sample here");
+						cell1.appendChild(textarea);
+						var cell2 = row.insertCell(1);
+						var textarea = document.createElement("textarea");
+						textarea.setAttribute("id", "demo-ef");
+						textarea.setAttribute("class", "demo-ef");
+						textarea.setAttribute("placeholder", "Enter your effeciency here");
+						cell2.appendChild(textarea);
+					}
+				</script>
+				<!-- <span class="image main"><img src="images/pic04.jpg" alt="" /></span> -->
+				<form name="DDI"	>
+					<div class="row gtr-uniform">
+
+						<div class="col-12">
+							<h2>Choose a model</h2>
+							<p>There are plenty of machine learning models available, feel free to experiment and find which one works best for your use case.</p>
+							<select name="demo-category" id="demo-category">
+								<option value="-1">- Choose Machine Learning Model -</option>
+								<option value="0">K Nearest Neighbour</option>
+								<option value="1">Adaboost</option>
+								<option value="2">Linear Regression</option>
+								<option value="3">Logistic Regression</option>
+								<option value="4">Support Vector Classifier</option>
+								<option value="5">Decision Tree Regressor</option>
+							</select>
+						</div>
+
+						<div class="col-12">
+							<h2>DNA Samples & Effeciency Data Input</h2>
+							<p>Enter your DNA Samples as a CSV file. First, open up software like Google Sheets or Microsoft Excel. Then make two entries in the first row to make your title (I suggest to keep it as DNA and Effeciency but The title will be ignored). Next, enter all your inputs in the respective columns. Make sure all the DNA strings are of the same length. Effeciency must be a positive rational number. Next export it to a CSV file. To export to CSV , refer <a href="https://support.microsoft.com/en-us/office/save-a-workbook-to-text-format-txt-or-csv-3e9a9d6c-70da-4255-aa28-fcacf1f081e6" target="
+								_blank">this</a> for Ms-Excel and for Google sheets Click the File tab, Choose Download,Select the Comma-separated values (CSV) option. </p>
+							<!-- <div class="table-wrapper">
+								<table class="alt" id="dditable">
+									<thead>
+										<tr>
+											<th>DNA</th>
+											<th>Effeciency</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td><textarea name="demo-dna" id="demo-dna"
+												placeholder="Enter your dna samples"
+												rows="2" class="demo-dna">ACCGC</textarea></td>
+											<td><textarea class="demo-ef" name="demo-ef" id="demo-ef"
+												placeholder="Enter your effeciency samples"
+												rows="1">100</textarea></td>
+										</tr>
+										<tr>
+											<td><textarea class="demo-dna" name="demo-dna" id="demo-dna"
+												placeholder="Enter your dna samples"
+												rows="2">ACCGC</textarea></td>
+											<td><textarea class="demo-ef" name="demo-ef" id="demo-ef"
+												placeholder="Enter your effeciency samples"
+												rows="1">100</textarea></td>
+										</tr>
+										</tbody>
+								</table>
+								<a class="button" onclick="addtotable()">Add item</a>
+								</div> -->
+							
+							<!-- <textarea name="demo-dna" id="demo-dna"
+								placeholder="Enter your dna samples in order seperated by a comma"
+								rows="6">ACCGC</textarea> -->
+							<input type="file" name="file" id="file" class="demo-dna"/>
+							<div class="col-12">
+								<br>
+								<h2>Test Data</h2>
+								<p>Enter a few sample dnas as diverse as possible sperated by a comma. It will then check and report the predictions for given set of dna. You can now easily find out which exact dna groups are at a disadvantage and start working on variations. </p>
+								<textarea name="demo-et" id="demo-et"
+									placeholder="Enter your samples in order seperated by a comma"
+									rows="6">AAAAAAAAAA,AAAAAAAAAA</textarea>
+								<br>
+
+							</div>
+							<div class="col-12">
+								<ul class="actions">
+									<li><input type="button" value="Send Data" class="primary" onclick="
+									a()"/></li>
+								</ul>
+							</div>
+							<div id="Report"></div>
+						</div>
+				</form>
+				
+			</section>
+
+		</div>
+
+		<!-- Footer -->
+		<footer id="footer">
+			<section>
+				<h2>About the project creator</h2>
+				<p>Prateek is an ambitious person interested in Maths,Science and Computer Science Technology. This
+					project is an attempt to unify two of his greatest passions under one project to benefit all of
+					humankind.This project is revolutionize medicine like no other.</p>
+
+			</section>
+			<section>
+				<h2>Contact details </h2>
+				<dl class="alt">
+					<dt>Address</dt>
+					<dd>PSBB KKN &bull; Chennai, TN &bull; India</dd>
+					<dt>Email</dt>
+					<dd><a href="mailto:prateekmahesh20@gmail.com">prateekmahesh20@gmail.com</a></dd>
+				</dl>
+
+			</section>
+			<p class="copyright">&copy; M.Prateek.</p>
+		</footer>
+
+	</div>
+
+	<!-- Scripts -->
+	<script src="/assets/js/jquery.min.js"></script>
+	<script src="/assets/js/jquery.scrollex.min.js"></script>
+	<script src="/assets/js/jquery.scrolly.min.js"></script>
+	<script src="/assets/js/browser.min.js"></script>
+	<script src="/assets/js/breakpoints.min.js"></script>
+	<script src="/assets/js/util.js"></script>
+	<script src="/assets/js/main.js"></script>
+</body>
+
+</html>

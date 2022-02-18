@@ -1,0 +1,377 @@
+<!DOCTYPE HTML>
+<!--
+	Stellar by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+
+<head>
+	<title>End User Interface
+	</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="/assets/css/main.css" />
+	<link rel="shortcut icon" href="images/logo.svg">
+
+	<noscript>
+		<link rel="stylesheet" href="/assets/css/noscript.css" />
+	</noscript>
+</head>
+
+<body class="is-preload">
+
+	<!-- Wrapper -->
+	<div id="wrapper">
+
+		<!-- Header -->
+		<header id="header">
+			<h1>End User Interface</h1>
+			<p>Use this to emulate the patient's experience</p>
+		</header>
+
+		<!-- Main -->
+		<div id="main">
+
+			<!-- Content -->
+
+			<section id="content" class="main">
+				<script>
+					var numberofalreadyexistingfileinput = 0;
+					var variationsnonlocal = [];
+					function a() {
+						var variations = [];
+						var variations_2 = [];
+						var encounteredjserrors = false;
+						var counter = 0;
+						//for each file input
+						for (var i = 0; i < numberofalreadyexistingfileinput; i++) {
+							//get all the items with a class of "demo-dna"
+							var dna = document.getElementById("file" + i);
+							var file = dna
+							//check if the file is empty
+							if (file.value == "") {
+								alert("Please enter a file");
+								encounteredjserrors = true;
+								//stop all code execution
+								return;
+								break;
+								//get file reader object
+
+							}
+							//get the element with id "demo-category"
+							var category = document.getElementById("demo-category");
+							var categoryValue = category.value;
+							//if the categoryValue is -1, then the user did not select a category
+							if (categoryValue == -1) {
+								alert("Please select a category");
+								encounteredjserrors = true;
+								return;
+								break;
+							}
+							//check the file type
+							var fileType = file.files[0].type;
+							console.log(fileType);
+							var fileUpload = file
+							var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv)$/;
+							var rows = []
+							var cols = ['', '']
+
+
+							//get the element with id "demo-et"
+							var et = document.getElementById("demo-et").value;
+							if (regex.test(fileUpload.value.toLowerCase())) {
+								if (typeof (FileReader) != "undefined") {
+									var reader = new FileReader();
+									reader.onload = function (e) {
+										var rows = []
+										var cols = ['', '']
+										console.log(e.target.result);
+										rows = e.target.result.split("\n");
+										console.log(rows);
+
+										for (var i = 0; i < rows.length; i++) {
+											rows[i] = rows[i].replace(/[\r\n]+/gm, "");;
+										}
+										for (var i = 0; i < rows.length; i++) {
+											var split = rows[i].split(",");
+											//add split[0] to cols[0]
+											cols[0] = cols[0].toString() + split[0].toString() + ",";
+											cols[1] = cols[1].toString() + split[1].toString() + ",";
+										}
+										console.log(cols);
+										// set cols[0] and cols[1] to cols[0] and cols[1] split at a comma
+										cols[0] = cols[0].split(",");
+										cols[1] = cols[1].split(",");
+										//remove the first and last element of cols[0] and cols[1]
+										cols[0].shift();
+										cols[0].pop();
+										cols[1].shift();
+										cols[1].pop();
+										console.log(cols);
+										var model = "None"
+										//switch case to determine which ML model to use
+										switch (categoryValue) {
+											case "0":
+												model = "knn"
+												break;
+											case "1":
+												model = "adaboost"
+												break;
+											case "2":
+												model = "linear"
+												break;
+											case "3":
+												model = "logistic"
+												break;
+											case "4":
+												model = "svc"
+												break;
+											case "5":
+												model = "dtr"
+												break;
+											default:
+												model = "None"
+												alert("Please select a category")
+												encounteredjserrors = true;
+												return;
+												break;
+										}
+										url = 'https://motionlessenragedquarks.prateekm1.repl.co/' + model + '?train=' + cols[0] + '&train_target=' + cols[1] + '&test_strings=' + et.toString();
+										console.log(url);
+										//create a function displayResults() to display the results
+										function displayResults(){
+											console.log(variations);
+											var report = document.getElementById("Report");
+											variationsnonlocal=variations;
+											console.log(variationsnonlocal);
+											report.scrollIntoView();
+											report.innerText = "";
+											//get the element with id "Report"
+											var report = document.getElementById("Report");
+											//scroll into view
+											report.scrollIntoView();
+											//create a table
+											var table = document.createElement("table");
+											//create a table row
+											var row = table.insertRow(0);
+											//create a table cell
+											var cell = row.insertCell(0);
+											//create a text node
+											var text = document.createTextNode("Variation");
+											//append the text node to the cell
+											cell.appendChild(text);
+											//create a table cell
+											cell = row.insertCell(1);
+											//create a text node
+											text = document.createTextNode("Drug Effeciency");
+											//append the text node to the cell
+											cell.appendChild(text);
+											//append the table to the div
+											report.appendChild(table);
+											firsttime = false;
+											console.log(variationsnonlocal[0]);
+											//loop through the variations
+											for (var i = 0; i < variations.length; i++) {
+												//try making variations[i] an array
+												try {
+													variations[i] = JSON.parse(variations[i]);
+													console.log(variations[i]);
+												}
+												catch{
+													//if it fails, then it is a string
+
+													variations[i] = [variations[i]];
+													
+												}
+
+
+											}
+											dataArray=variations
+											console.log(dataArray);
+											console.log(dataArray.length);
+											//get the table element
+											var table = document.getElementById("Report").getElementsByTagName("table")[0];
+											//get the element with id demo-et
+											//iterate through the et_split
+											for (var i = 0; i < numberofalreadyexistingfileinput; i++) {
+												console.log(variations[i]);
+												//get the element with id "Report"
+												var report = document.getElementById("Report");
+												//create a table row
+												var row = table.insertRow(i + 1);
+												//create a table cell
+												var cell = row.insertCell(0);
+												//create a text node
+												var text = document.createTextNode("Variation " + (i+1).toString());
+												//append the text node to the cell
+												cell.appendChild(text);
+												//create a table cell
+												cell = row.insertCell(1);
+												//create a text node
+												text = document.createTextNode(dataArray[i][0].toString());
+												//append the text node to the cell
+												cell.appendChild(text);
+											}
+										}
+										//fetch the url
+										function pushToVariations(data){
+											variations.push(data);
+											counter++;
+											console.log(counter);
+											if(counter==numberofalreadyexistingfileinput){
+												console.log("Displaying");
+												displayResults();
+											}
+										}
+										fetch(url)
+											.then(response => response.text())
+											.then(data => pushToVariations(data));
+										//if fetch is successful, then increment the counter
+										
+									}
+									reader.readAsText(fileUpload.files[0]);
+								} else {
+									alert("This browser does not support HTML5.");
+								}
+							} else {
+								alert("Please upload a valid CSV file.");
+
+							}
+							//iterate through the rows and remove all line endings
+
+							//split the rows into columns
+
+							console.log(cols);
+
+
+							//TODO: Implement custom Cors reverse proxy
+							//TODO: Improvise csv file detection
+							//TODO:Add Custom Alert to display the data
+
+						}
+						return false;
+					}
+
+					function validate(ob) {
+						var invalidChars = /[^0-9]/gi
+						if (invalidChars.test(ob.value)) {
+							ob.value = ob.value.replace(invalidChars, "");
+						}
+
+						//convert ob.value to a number
+						var num = parseInt(ob.value);
+						//check if the number is above zero , isnt NaN and isnt undefined
+						if (num > -1 && !isNaN(num) && num != undefined && num < 101) {
+
+
+							//if all is good then set the value of the input to the number
+							if (numberofalreadyexistingfileinput == num) {
+								//do nothing
+							}
+							else if (numberofalreadyexistingfileinput < num) {
+								//create new file input element and append it to the div with the id files while numberofalreadyexistingfileinput is less than num
+								for (var i = numberofalreadyexistingfileinput; i < num; i++) {
+									var newfileinput = document.createElement("input");
+									newfileinput.setAttribute("type", "file");
+									newfileinput.setAttribute("name", "file" + i);
+									newfileinput.setAttribute("class", "demo-dna");
+									newfileinput.setAttribute("id", "file" + i);
+									document.getElementById("files").appendChild(newfileinput);
+								}
+								numberofalreadyexistingfileinput = num;
+
+							}
+							else if (numberofalreadyexistingfileinput > num) {
+								//delete the last file input element while numberofalreadyexistingfileinput is greater than num
+								for (var i = numberofalreadyexistingfileinput; i > num; i--) {
+									//get the total number of children of the div with id files
+									var totalnumberofchildren = document.getElementById("files").lastChild.remove();
+
+								}
+								numberofalreadyexistingfileinput = num;
+							}
+						}
+					}
+				</script>
+				<!-- <span class="image main"><img src="images/pic04.jpg" alt="" /></span> -->
+				<div class="row gtr-uniform">
+
+					<div class="col-12">
+						<h2>Choose a model. (<b>Won't be shown to End User</b>) </h2>
+						<p>There are plenty of machine learning models available, feel free to experiment and find which
+							one works best for your use case</p>
+						<select name="demo-category" id="demo-category">
+							<option value="-1">- Choose Machine Learning Model -</option>
+							<option value="0">K Nearest Neighbour</option>
+							<option value="1">Adaboost</option>
+							<option value="2">Linear Regression</option>
+							<option value="3">Logistic Regression</option>
+							<option value="4">Support Vector Classifier</option>
+							<option value="5">Decision Tree Regressor</option>
+						</select>
+					</div>
+
+					<div class="col-12">
+						<h2>DNA Samples & Effeciency Data Input (<b>Won't be shown to End User</b>)</h2>
+						<p>Enter your DNA Samples as a CSV file. First, open up software like Google Sheets or Microsoft Excel. Then make two entries in the first row to make your title (I suggest to keep it as DNA and Effeciency but The title will be ignored). Next, enter all your inputs in the respective columns. Make sure all the DNA strings are of the same length. Effeciency must be a positive rational number. Next export it to a CSV file. To export to CSV , refer <a href="https://support.microsoft.com/en-us/office/save-a-workbook-to-text-format-txt-or-csv-3e9a9d6c-70da-4255-aa28-fcacf1f081e6" target="
+							_blank">this</a> for Ms-Excel and for Google sheets Click the File tab, Choose Download,Select the Comma-separated values (CSV) option. Repeat and upload for how many ever
+							variations you have.</p>
+						<h2>How many Variations do you have? (Must be an integer above 0)</h2>
+						<textarea rows="1" onkeyup="validate(this)">0</textarea>
+						<br>
+						<div id="files"></div>
+						<br>
+						<div>
+							<h2>Test Data</h2>
+							<p>Enter your DNA </p>
+							<textarea name="demo-et" id="demo-et"
+								placeholder="Enter your samples in order seperated by a comma" rows="6">CCGCG</textarea>
+							<br>
+						</div>
+						<div id="Report"></div>
+						<br>
+						<a onclick="a()" class="button primary">Submit</a>
+					</div>
+
+
+
+			</section>
+
+		</div>
+
+		<!-- Footer -->
+		<footer id="footer">
+			<section>
+				<h2>About the project creator</h2>
+				<p>Prateek is an ambitious person interested in Maths,Science and Computer Science Technology. This
+					project is an attempt to unify two of his greatest passions under one project to benefit all of
+					humankind.This project is revolutionize medicine like no other.</p>
+
+			</section>
+			<section>
+				<h2>Contact details </h2>
+				<dl class="alt">
+					<dt>Address</dt>
+					<dd>PSBB KKN &bull; Chennai, TN &bull; India</dd>
+					<dt>Email</dt>
+					<dd><a href="mailto:prateekmahesh20@gmail.com">prateekmahesh20@gmail.com</a></dd>
+				</dl>
+
+			</section>
+			<p class="copyright">&copy; M.Prateek.</p>
+		</footer>
+
+	</div>
+
+	<!-- Scripts -->
+	<script src="/assets/js/jquery.min.js"></script>
+	<script src="/assets/js/jquery.scrollex.min.js"></script>
+	<script src="/assets/js/jquery.scrolly.min.js"></script>
+	<script src="/assets/js/browser.min.js"></script>
+	<script src="/assets/js/breakpoints.min.js"></script>
+	<script src="/assets/js/util.js"></script>
+	<script src="/assets/js/main.js"></script>
+</body>
+
+</html>
