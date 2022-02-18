@@ -8,11 +8,12 @@ First, you need to install the dependencies and change the backend url in /publi
 `pip install flask`  
 `pip install flask-cors`  
 `pip install sklearn`  
-`pip install waitress`  
+`pip install waitress` 
 [Note: waitress is optional]
 
 Then, you can run the server and test the frontend.  
 [Note: I've deployed the frontend on firebase so ignore the firebase.json file]
 
-## Credits
-Thanks to Stellar Template by HTML5 UP for the frontend.
+## Credits 
+Thanks to [Stellar Template](https://html5up.net/stellar) for the frontend.  
+Thanks to Microsoft for Github Copilot. It really helped me to get started and save time.
