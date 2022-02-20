@@ -1,9 +1,9 @@
 # Personalized Medicine
 
-This is a personal project. This is an attempt to create a working personalized medicine system interface using AI. Hopefully this will be useful in the field of medicine.
+This is a personal project and an attempt to create a working personalized medicine system interface using AI. Hopefully, this will be useful in the field of medicine.
 
 ## Running the project
-First, you need to install the dependencies and change the backend url in /public/DDI/index.html and /public/EUI/index.html. Then, you need to run the server. Make sure to install the follwing dependencies:  
+First, you need to install the dependencies and change the backend URL in /public/DDI/index.html and /public/EUI/index.html. Then, you need to run the server. Make sure to install the following dependencies:  
 
 `pip install flask`  
 `pip install flask-cors`  
@@ -16,4 +16,4 @@ Then, you can run the server and test the frontend.
 
 ## Credits 
 Thanks to [Stellar Template](https://html5up.net/stellar) for the frontend.  
-Thanks to Microsoft for Github Copilot. It really helped me to get started and save time.
+Thanks to Microsoft for Github Copilot. It helped me to get started and save time.
